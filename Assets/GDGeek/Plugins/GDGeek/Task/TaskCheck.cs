@@ -29,43 +29,14 @@ THE SOFTWARE.
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 namespace GDGeek{
 
+	public class TaskCheck:Task{
 
-	public class TaskState{
-		//public 
-		//private TaskDelegate.Factory _creater;
-		protected static int index_ =  0; 
-		//public delegate string NextState();
-
-		static public StateWithEventMap Create(TaskFactory creater, FSM fsm, StateWithEventMap.StateAction nextState){
-			string over = "over" + index_.ToString();
-
-			index_++;
-			StateWithEventMap state = new StateWithEventMap ();
-			Task task = null;
-			state.onStart += delegate {
-				task = creater();
-				TaskManager.PushBack (task, delegate {
-					fsm.post(over);
-				});
-				TaskManager.Run (task);
-			};
-			state.onOver += delegate {
-				task.isOver = delegate{
-					return true;
-				};
-			};
-			state.addAction (over, nextState);
-			return state;
+		public TaskCheck(TaskIsOver isOver){
+			this.isOver = isOver;
 		}
 
-		static public StateWithEventMap Create(TaskFactory creater, FSM fsm, string nextState){
-			return Create (creater, fsm, delegate {
-				return nextState;
-			});
-		}
-
-		
-	}
+	};
 }

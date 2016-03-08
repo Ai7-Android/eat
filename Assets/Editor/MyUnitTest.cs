@@ -17,9 +17,9 @@ public class MyUnitTest {
 	}
 	[Test]
 	public void MapTest(){
-		Map map = Component.FindObjectOfType<Map> ();
+		MapCtrl map = Component.FindObjectOfType<MapCtrl> ();
 		Assert.NotNull (map);
-		MapData data = map.ask (new Vector2 (0, 0));
+		IMapData data = map.ask (new Vector2 (0, 0));
 		Assert.IsTrue(data.pass (new Vector2 (1, 0)));
 
 		Vector2 cell = map.position2cell (new Vector2 (0, 0));
@@ -37,10 +37,22 @@ public class MyUnitTest {
 
 		data = map.ask (new Vector2 (8, 1));
 		Assert.IsFalse (data.pass (new Vector2 (1, 0)));
-
-		Debug.Log (map.position2cell (new Vector2 (-1, 34)));
 		data = map.ask (map.position2cell(new Vector2 (-1, 34)));
 		Assert.IsFalse (data.pass (new Vector2 (1, 0)));
+		Vector2 export = map.export ();
+		Assert.IsNotNull (export);
+
+		map.initialize();
+		data = map.ask (export);
+		data.trample ();
+		Assert.IsFalse (map.solve ());
+		Debug.Log(map.isOpen ());
+
+		map.open ();
+		data = map.ask (export);
+		data.trample ();
+		Assert.IsTrue (map.solve ());
+
 	}
 
 }

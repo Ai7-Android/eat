@@ -17,11 +17,21 @@ public class CopCtrl : MonoBehaviour {
 	public Arrow _director = Arrow.Down;
 	public Arrow _arrow;
 
+	public int rescueNum
+	{
+		get {
+			return _childList.Count; 
+		}
+
+	}
+
+
+
 	public List<ChildCtrl> _childList = new List<ChildCtrl>();
 	public List<Vector3> _oldPosList = new List<Vector3>();
 
-	private Map getMap(){
-		return Component.FindObjectOfType<Map> ();
+	private MapCtrl getMap(){
+		return Component.FindObjectOfType<MapCtrl> ();
 	
 	}
 	private Vector3 getLocalTarget(){
@@ -61,18 +71,7 @@ public class CopCtrl : MonoBehaviour {
 
 		return state;
 	}
-			/*
-				Map map = this.getMap();
-
-		Vector3 target = getWorldTarget();
-		Vector2 cell = map.position2cell(new Vector2(target.x, target.z));
-		MapData data = map.ask(cell);
-		bool isPass =data.pass(
-			map.position2cell(
-				new Vector2(this._cop.gameObject.transform.position.x,
-					this._cop.gameObject.transform.position.z)));
-
-			*/
+			
 	private Task turnTask(){
 
 		TweenTask task = new TweenTask(delegate() {
@@ -108,17 +107,16 @@ public class CopCtrl : MonoBehaviour {
 			return wait;
 		}, this.fsm_, delegate(FSMEvent evt) {
 
-			Map map = this.getMap();
+			MapCtrl map = this.getMap();
 
 			Vector3 target = getWorldTarget();
 			Vector2 cell = map.position2cell(new Vector2(target.x, target.z));
-			MapData data = map.ask(cell);
-			bool isPass =data.pass(
+			IMapData data = map.ask(cell);
+			bool isPass = data.pass(
 				map.position2cell(
 					new Vector2(this._cop.gameObject.transform.position.x,
 						this._cop.gameObject.transform.position.z)));
 
-			Debug.Log("pass" + isPass);
 			if(isPass){
 				return "walk";
 			}else{
@@ -154,6 +152,13 @@ public class CopCtrl : MonoBehaviour {
 
 		};
 		state.onOver += delegate {
+
+			MapCtrl map = this.getMap();
+			Vector2 cell = map.position2cell(new Vector2(_cop.gameObject.transform.position.x, _cop.gameObject.transform.position.z));
+			Debug.Log("cell:"+cell);
+			IMapData data = map.ask(cell);
+			data.trample();
+
 			_director = _arrow;
 		};
 
@@ -179,7 +184,6 @@ public class CopCtrl : MonoBehaviour {
 			if(cc == null){
 				_childList.Add(childCtrl);
 			}
-			Debug.Log(_childList.Count);
 		};
 		fsm_.addState ("stop", getStopState());
 		fsm_.addState("walk", getWalkState());
@@ -205,15 +209,7 @@ public class CopCtrl : MonoBehaviour {
 			if(_arrow != Arrow.Left)
 				_arrow = Arrow.Right;
 		}
-		/*
-		if (Input.GetKeyUp (KeyCode.UpArrow) ||
-			Input.GetKeyUp (KeyCode.DownArrow)||
-			Input.GetKeyUp (KeyCode.LeftArrow)||
-			Input.GetKeyUp (KeyCode.RightArrow)
-		) {
-			fsm_.post ("goStop");
-		}
-*/
+
 	}
 }
 	
