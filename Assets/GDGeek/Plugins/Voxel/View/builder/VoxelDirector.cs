@@ -54,8 +54,8 @@ namespace GDGeek{
 				VoxelMeshBuild vmb = new VoxelMeshBuild ();
 				vmb.build(this._product);
 
-				//VoxelRemoveSameVertices rsv = new VoxelRemoveSameVertices ();
-				//rsv.build(this._product);
+				VoxelRemoveSameVertices rsv = new VoxelRemoveSameVertices ();
+				rsv.build(this._product);
 
 				//VoxelRemoveFace vrf = new VoxelRemoveFace ();
 				//vrf.build(this._product);

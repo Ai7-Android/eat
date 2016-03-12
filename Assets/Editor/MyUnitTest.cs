@@ -28,26 +28,26 @@ public class MyUnitTest {
 		MapCtrl map = Component.FindObjectOfType<MapCtrl> ();
 		Assert.NotNull (map);
 
-		IMapData data = map.ask (new Vector2 (0, 0));
-		Assert.IsTrue(data.pass (new Vector2 (1, 0)));
+		IMapData data = map.ask (new VectorInt2 (0, 0));
+		Assert.IsTrue(data.pass (new VectorInt2 (1, 0)));
 	
-		Vector2 cell = map.position2cell (new Vector2 (0, 0));
-		Assert.AreEqual (cell, new Vector2(0,0));
-		Assert.AreEqual (map.position2cell (new Vector2 (15, 15)), new Vector2(0,0));
-		Assert.AreEqual (map.position2cell (new Vector2 (16, 16)), new Vector2(1,1));
+		VectorInt2 cell = map.position2cell (new Vector2 (0, 0));
+		Assert.AreEqual (cell, new VectorInt2(0,0));
+		Assert.AreEqual (map.position2cell (new Vector2 (15, 15)), new VectorInt2(0,0));
+		Assert.AreEqual (map.position2cell (new Vector2 (16, 16)), new VectorInt2(1,1));
 
-		Assert.AreEqual (map.position2cell (new Vector2 (0, 16)), new Vector2(0,1));
+		Assert.AreEqual (map.position2cell (new Vector2 (0, 16)), new VectorInt2(0,1));
 
-		data = map.ask (new Vector2 (-1, -1));
-		Assert.IsFalse (data.pass (new Vector2 (1, 0)));
-		data = map.ask (new Vector2 (1, 1));
-		Assert.IsTrue (data.pass (new Vector2 (1, 0)));
+		data = map.ask (new VectorInt2 (-1, -1));
+		Assert.IsFalse (data.pass (new VectorInt2 (1, 0)));
+		data = map.ask (new VectorInt2 (1, 1));
+		Assert.IsTrue (data.pass (new VectorInt2 (1, 0)));
 
-		data = map.ask (new Vector2 (8, 1));
-		Assert.IsFalse (data.pass (new Vector2 (1, 0)));
+		data = map.ask (new VectorInt2 (8, 1));
+		Assert.IsFalse (data.pass (new VectorInt2 (1, 0)));
 		data = map.ask (map.position2cell(new Vector2 (-1, 34)));
-		Assert.IsFalse (data.pass (new Vector2 (1, 0)));
-		Vector2 export = map.export ();
+		Assert.IsFalse (data.pass (new VectorInt2 (1, 0)));
+		VectorInt2 export = map.export ();
 
 		Assert.IsNotNull (export, " not ooo");
 
@@ -69,6 +69,87 @@ public class MyUnitTest {
 
 		return;
 		/**/
+	}
+
+	[Test]
+	public void ModelTest(){
+		MapFactory factory = Component.FindObjectOfType<MapFactory> ();
+		MapFloor floor = new MapFloor (new VectorInt2(7, 7));
+
+
+		floor.cell ("road", 0, 0);
+		floor.cell ("road", 1, 0);
+		floor.cell ("road", 3 ,0);
+		floor.cell ("road",  4 ,0);
+		floor.cell ("road",  5,0);
+		floor.cell ("road", 6,0 );
+
+		floor.cell ("road", 0,1);
+		floor.cell ("road", 1, 1);
+
+		floor.cell ("road", 3,1 );
+		floor.cell ("road", 4,1 );
+		floor.cell ("road", 5,1);
+		floor.cell ("road", 6,1);
+
+
+		floor.cell ("road", 0,2);
+		floor.cell ("road", 1,2);
+
+		floor.cell ("road", 3,2);
+		floor.cell ("road", 4,2);
+		floor.cell ("road", 5,2);
+		floor.cell ("road", 6,2);
+
+
+		floor.cell ("road", 0,3);
+		floor.cell ("road", 1,3);
+		floor.cell ("road", 2,3);
+		floor.cell ("road", 3,3);
+		floor.cell ("road", 4,3);
+		floor.cell ("road", 5,3);
+		floor.cell ("road", 6,3);
+
+		floor.cell ("road", 6,4);
+		floor.cell ("road", 6,5);
+		floor.cell ("road", 6,6);
+
+		floor.cell ("road", 5,5);
+		floor.cell ("road", 5,6);
+
+
+		floor.cell ("road", 4,5);
+		floor.cell ("road", 4,6);
+
+		floor.cell ("road", 3,5);
+		floor.cell ("road", 3,6);
+		floor.cell ("road", 2,5);
+		floor.cell ("road", 2,6);
+		floor.cell ("road", 1,5);
+		floor.cell ("road", 1,6);
+		floor.cell ("road", 0,5);
+		floor.cell ("road", 0,6);
+
+		floor.def("grass");
+
+		factory.add (floor);
+
+		MapBarrier barrier = new MapBarrier ();
+		barrier.block("grass");
+
+		factory.add (barrier);
+		MapModel model = factory.create();
+		MapCtrl ctrl = Component.FindObjectOfType<MapCtrl> ();
+		Assert.NotNull (ctrl);
+		ctrl.setup(model);
+		IMapData data = ctrl.ask (new VectorInt2(1,0));
+		Assert.IsTrue (data.pass (new VectorInt2 (0, 0)));
+		data = ctrl.ask (new VectorInt2(2,0));
+		Assert.IsFalse (data.pass (new VectorInt2 (1, 0)));
+
+		//model
+		//model.field
+		//model.barrier
 	}
 	[Test]
 	public void BuildMapTest(){

@@ -5,9 +5,15 @@ using GDGeek;
 public class ChildCtrl : MonoBehaviour {
 	public Child _child;
 	public FSM _fsm = new FSM();
+	private bool isDie_ = false;
 	public Vector3 _position = new Vector3();
 	public void mustGo(Vector3 position){
 		this._position = position;
+	}
+	public bool isDie{
+		get{ 
+			return isDie_;
+		}
 	}
 	public State getWaitState(){
 		StateWithEventMap state = TaskState.Create(delegate{
@@ -85,6 +91,15 @@ public class ChildCtrl : MonoBehaviour {
 		return state;
 	}*/
 	void Start () {
+		isDie_ = false;
+		this._child._triggerback += delegate(Collider other) {
+			AlienCtrl alien = other.gameObject.GetComponent<AlienCtrl>();
+			if(alien != null){
+				isDie_ = true;
+				this._child._mesh.gameObject.SetActive(false);
+				Debug.Log(" yes , i die!");
+			}	
+		};
 		_position = this._child.transform.position;
 
 

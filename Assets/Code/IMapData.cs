@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+namespace GDGeek{
 public interface IMapData {
 
 
-	bool pass (Vector2 from);
+	bool pass (VectorInt2 from);
 	void trample ();
 	/*
 	private bool pass_ = false;
@@ -20,4 +20,5 @@ public interface IMapData {
 	
 	}*/
 
+}
 }
