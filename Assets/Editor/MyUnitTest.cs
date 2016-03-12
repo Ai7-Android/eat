@@ -71,6 +71,81 @@ public class MyUnitTest {
 		/**/
 	}
 	[Test]
+	public void BuildMapTest(){
+
+		MapFactory factory = Component.FindObjectOfType<MapFactory> ();
+		MapFloor floor = new MapFloor (new VectorInt2(7, 7));
+		Assert.NotNull (factory);
+		floor.def("grass");
+
+		floor.cell ("road", 0, 0);
+		floor.cell ("road", 1, 0);
+		floor.cell ("road", 3 ,0);
+		floor.cell ("road",  4 ,0);
+		floor.cell ("road",  5,0);
+		floor.cell ("road", 6,0 );
+
+		floor.cell ("road", 0,1);
+		floor.cell ("road", 1, 1);
+
+		floor.cell ("road", 3,1 );
+		floor.cell ("road", 4,1 );
+		floor.cell ("road", 5,1);
+		floor.cell ("road", 6,1);
+
+
+		floor.cell ("road", 0,2);
+		floor.cell ("road", 1,2);
+
+		floor.cell ("road", 3,2);
+		floor.cell ("road", 4,2);
+		floor.cell ("road", 5,2);
+		floor.cell ("road", 6,2);
+
+
+		floor.cell ("road", 0,3);
+		floor.cell ("road", 1,3);
+		floor.cell ("road", 2,3);
+		floor.cell ("road", 3,3);
+		floor.cell ("road", 4,3);
+		floor.cell ("road", 5,3);
+		floor.cell ("road", 6,3);
+
+		floor.cell ("road", 6,4);
+		floor.cell ("road", 6,5);
+		floor.cell ("road", 6,6);
+
+		floor.cell ("road", 5,5);
+		floor.cell ("road", 5,6);
+
+
+		floor.cell ("road", 4,5);
+		floor.cell ("road", 4,6);
+
+		floor.cell ("road", 3,5);
+		floor.cell ("road", 3,6);
+		floor.cell ("road", 2,5);
+		floor.cell ("road", 2,6);
+		floor.cell ("road", 1,5);
+		floor.cell ("road", 1,6);
+		floor.cell ("road", 0,5);
+		floor.cell ("road", 0,6);
+
+
+
+		factory.add (floor);
+
+		MapBarrier barrier = new MapBarrier ();
+		barrier.block("grass");
+
+		factory.add (barrier);
+		MapModel model = factory.create();
+		factory.render (model);
+		saveToFile ("map.vox", model.vs);
+	//	floor.build (model);
+
+	}
+	[Test]
 	public void MyBuilderTest(){
 
 		MapFactory factory = Component.FindObjectOfType<MapFactory> ();
@@ -83,10 +158,19 @@ public class MyUnitTest {
 		floor.cell ("road", 1, 2);
 		floor.cell ("road", 1, 3);
 		floor.cell ("road", 2, 2);
-		floor.build (model, factory.store);
+		floor.build (model);
+		MapBarrier barrier = new MapBarrier ();
+		barrier.block("grass");
 
+		floor.build (model);
+		barrier.build(model);
+		floor.render (model, factory.store);
+		barrier.render (model, factory.store);
 
-		saveToFile ("build.vox", model.vs);
+		Assert.AreEqual ((int)model.barrier [0, 0], (int)(MapStore.Around.Up | MapStore.Around.Right));
+		Assert.AreEqual (model.barrier [1, 0], (int)(MapStore.Around.Left|MapStore.Around.Right));
+		Assert.AreEqual (model.barrier [2, 0], (int)(MapStore.Around.Left|MapStore.Around.Right|MapStore.Around.Up));
+		//saveToFile ("build.vox", model.vs);
 
 		//barrier.build (model, factory.store);
 	}
@@ -142,9 +226,9 @@ public class MyUnitTest {
 		floor.cell ("road", 1, 1);
 
 		MapModel model = new MapModel ();
-		MapBarrier barrier = new MapBarrier ("barrier");
-		floor.build (model, factory.store);
-		barrier.build (model, factory.store);
+		MapBarrier barrier = new MapBarrier ();
+		floor.build (model);
+		barrier.build (model);
 		//barrier.analysis (floor.field, "grass");
 
 		//MapStore store =  Component.FindObjectOfType<MapStore> ();

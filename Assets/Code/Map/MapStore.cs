@@ -34,7 +34,7 @@ namespace GDGeek{
 
 			VoxelStruct vs = VoxelFormater.ReadFromMagicaVoxel (br);
 			SplitVoxel split = new SplitVoxel (vs);
-			Debug.Log ("!!!" + vs.datas.Count);
+//			Debug.Log ("!!!" + vs.datas.Count);
 			for (int i = 0; i < boxes_.Count; ++i) {
 				split.addBox (boxes_[i]);
 			}

@@ -78,15 +78,23 @@ namespace GDGeek{
 			VoxelStruct vs = join.doIt ();
 			return vs;
 		}
+		public VoxelStruct render(MapModel model){
+			for (int i = 0; i < _builders.Count; ++i) {
+				_builders[i].render (model, store);
+			}
+			return model.vs;
+		}
+
 		public MapModel create(){
 			MapModel model = new MapModel ();
 			model.clear ();
 
 
 			for (int i = 0; i < _builders.Count; ++i) {
-				_builders[i].build (model, store);
+				_builders[i].build (model);
 			}
 
+		
 
 			return model;
 		}

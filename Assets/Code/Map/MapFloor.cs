@@ -56,10 +56,12 @@ namespace GDGeek{
 		}
 
 
-
-		public void build(MapModel model, MapStore store){
-			model.field = field_;
+		public void render(MapModel model, MapStore store){
 			model.vs = this.getFloor (field_, store);
+		}
+		public void build(MapModel model){
+			model.field = field_;
+
 		}
 		public void cell(string type, int i, int j){
 			field_ [i, j] = type;
