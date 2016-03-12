@@ -132,9 +132,9 @@ namespace GDGeek{
 				
 				for(int i=0; i < voxelData.Length; ++i){
 					datas[i] = new VoxelData();
-					datas[i].x = voxelData[i].x;
-					datas[i].y = voxelData[i].y;
-					datas[i].z = voxelData[i].z;
+					datas[i].pos.x = voxelData[i].x;
+					datas[i].pos.y = voxelData[i].y;
+					datas[i].pos.z = voxelData[i].z;
 					datas[i].id = i;
 					//ushort c =  (colors == null ? voxColors[voxelData[i].color - 1] : colors[voxelData[i].color - 1]);
 					if(colors == null){
@@ -179,9 +179,9 @@ namespace GDGeek{
 			VoxelData[] datas = new VoxelData[jData.vox.Length];
 			for(int i = 0; i<jData.vox.Length; ++i){
 				VoxelData data = new VoxelData();
-				data.x = jData.vox[i].x;
-				data.y = jData.vox[i].y;
-				data.z = jData.vox[i].z;
+				data.pos.x = jData.vox[i].x;
+				data.pos.y = jData.vox[i].y;
+				data.pos.z = jData.vox[i].z;
 				data.id = i;
 				if(jData.rgba != null && jData.vox[i].c-1 < jData.rgba.Length){
 					

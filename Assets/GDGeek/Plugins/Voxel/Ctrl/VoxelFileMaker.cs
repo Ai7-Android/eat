@@ -14,7 +14,7 @@ namespace GDGeek
 
 			for (int i = 0; i < model.data.Length; ++i) {
 				VoxelData data = model.data [i];
-				VectorInt3 p = new VectorInt3 (data.x, data.y, data.z) + offset;
+				VectorInt3 p = new VectorInt3 (data.pos.x, data.pos.y, data.pos.z) + offset;
 				if (!dictionary_.ContainsKey (p)) {
 					dictionary_ [p] = data;
 				}
@@ -61,9 +61,9 @@ namespace GDGeek
 			stream.Write (count);
 
 			foreach (KeyValuePair<VectorInt3, VoxelData> kv in this.dictionary_) {
-				byte x = (byte)(kv.Value.x);
-				byte y = (byte)(kv.Value.y);
-				byte z = (byte)(kv.Value.z);
+				byte x = (byte)(kv.Value.pos.x);
+				byte y = (byte)(kv.Value.pos.y);
+				byte z = (byte)(kv.Value.pos.z);
 				//btye c = 
 				stream.Write (x);
 				stream.Write (y);

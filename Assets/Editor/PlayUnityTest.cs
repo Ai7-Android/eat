@@ -10,21 +10,13 @@ public class PlayUnityTest {
 		
 		Play play = Component.FindObjectOfType<Play> ();
 
-		Assert.NotNull (play);
+		Assert.NotNull (play);/*
 		Task playing = play.running ();
 		playing.init ();
 		playing.update(10.0f);
-		playing.shutdown ();
+		playing.shutdown ();*/
 	}
 
-	[Test]
-	public void FactoryTest(){
-		GameFactory factory = Component.FindObjectOfType<GameFactory> ();
-
-		Assert.NotNull (factory);
-		//factory.
-
-	}
 	
 
 }

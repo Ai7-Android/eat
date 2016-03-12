@@ -5,9 +5,64 @@ using GDGeek;
 using System.IO;
 
 public class VoxelMapMakerUT {
-	[Test]
-	public void SpliceVoxelTest(){
 
+	[Test] 
+	public void SplitVoxelTest(){
+
+		VectorInt3 a = new VectorInt3 (3, 4, 5);
+		VectorInt3 b = new VectorInt3 (1, 2, 3);
+		Assert.AreEqual (a - b, new VectorInt3 (2, 2, 2));
+
+		FileStream sr2 = new FileStream (".//Assets//Voxel//grass.bytes", FileMode.OpenOrCreate, FileAccess.Read);
+
+		System.IO.BinaryReader br2 = new System.IO.BinaryReader (sr2); 
+
+		VoxelStruct vs = VoxelFormater.ReadFromMagicaVoxel (br2);
+
+
+		SplitVoxel split = new SplitVoxel (vs);
+
+		split.addBox(new VectorInt3(0,0,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(0,17,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(0,34,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(0,54,0), new VectorInt3(16,16,3));
+
+
+		split.addBox(new VectorInt3(20,0,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(20,17,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(20,34,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(20,54,0), new VectorInt3(16,16,3));
+
+
+		split.addBox(new VectorInt3(37,0,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(37,17,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(37,34,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(37,54,0), new VectorInt3(16,16,3));
+
+
+		split.addBox(new VectorInt3(54,0,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(54,17,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(54,34,0), new VectorInt3(16,16,3));
+		split.addBox(new VectorInt3(54,54,0), new VectorInt3(16,16,3));
+		/**/
+
+		VoxelStruct[] voxels = split.doIt ();
+		for (int i = 0; i < voxels.Length; ++i) {
+			FileStream sw = new FileStream ("cool"+i+".vox", FileMode.Create, FileAccess.Write);
+
+			System.IO.BinaryWriter bw = new System.IO.BinaryWriter (sw); 
+			//voxels [i].normal ;
+			VoxelFormater.WriteToMagicaVoxel (voxels[i], bw);
+			sw.Close ();
+		}
+		//VoxelStruct vs2 = splice.spliceAll ();
+
+
+	}
+	[Test]
+	public void JoinVoxelTest(){
+		return;
+		/*
 		FileStream sr2 = new FileStream ("fly2.vox", FileMode.OpenOrCreate, FileAccess.Read);
 
 
@@ -16,10 +71,10 @@ public class VoxelMapMakerUT {
 		VoxelStruct vs = VoxelFormater.ReadFromMagicaVoxel (br2);
 
 		sr2.Close ();
-		SpliceVoxel splice = new SpliceVoxel ();
-		splice.addVoxel(vs, new VectorInt3(0, 0, 0));
-		splice.addVoxel(vs, new VectorInt3(10, 10, 10));
-		VoxelStruct vs2 = splice.spliceAll ();
+		JoinVoxel join = new JoinVoxel ();
+		join.addVoxel(vs, new VectorInt3(0, 0, 0));
+		join.addVoxel(vs, new VectorInt3(10, 10, 10));
+		VoxelStruct vs2 = join.doIt ();
 
 		FileStream sw = new FileStream ("fly3.vox", FileMode.Create, FileAccess.Write);
 
@@ -116,6 +171,7 @@ public class VoxelMapMakerUT {
 		for (int i = 0; i < vs.rgba.palette.Length; ++i) {
 			Assert.AreEqual(vs.rgba.palette[i], vs2.rgba.palette[i]);
 		}
+
 //		Debug.Log (vs2.rgba.palette.Length);
 		Assert.AreEqual(vs.rgba.name, vs2.rgba.name);
 		Assert.AreEqual(vs.rgba.size, vs2.rgba.size);
@@ -136,16 +192,18 @@ public class VoxelMapMakerUT {
 
 
 		//Debug.Log ();
-		Assert.AreEqual(vs.datas.Length, vs2.datas.Length);
+		Assert.AreEqual(vs.datas.Count, vs2.datas.Count);
+
 //		Debug.Log (vs2.datas.Length);
-		for (int i = 0; i < vs.datas.Length; ++i) {
+		for (int i = 0; i < vs.datas.Count; ++i) {
 			Assert.AreEqual(vs.datas[i].color, vs2.datas[i].color);
-			Assert.AreEqual(vs.datas[i].x, vs2.datas[i].x);
-			Assert.AreEqual(vs.datas[i].y, vs2.datas[i].y);
-			Assert.AreEqual(vs.datas[i].z, vs2.datas[i].z);
+			Assert.AreEqual(vs.datas[i].pos.x, vs2.datas[i].pos.x);
+			Assert.AreEqual(vs.datas[i].pos.y, vs2.datas[i].pos.y);
+			Assert.AreEqual(vs.datas[i].pos.z, vs2.datas[i].pos.z);
 		}
 
 
-		Assert.AreEqual (vs.datas.Length, vs.datas.Length);	
+		Assert.AreEqual (vs.datas.Count, vs.datas.Count);	
+
     }
 }

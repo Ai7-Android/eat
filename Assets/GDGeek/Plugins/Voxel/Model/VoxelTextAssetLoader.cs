@@ -13,7 +13,7 @@ namespace GDGeek{
 				System.IO.BinaryReader br = new System.IO.BinaryReader (sw); 
 				if(_model != null){
 					VoxelStruct vs = VoxelFormater.ReadFromMagicaVoxel (br);
-					_model.data = vs.datas;
+					_model.data = vs.datas.ToArray();
 					_model.vs = vs;
 				}
 			}

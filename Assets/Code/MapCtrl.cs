@@ -17,7 +17,7 @@ public class MapCtrl : MonoBehaviour {
 	}
 	public void initialize(){
 		isOpen_ = false;
-		this._map.init ();
+		//this._map.init ();
 	
 	}
 	public Vector2 export(){
@@ -66,5 +66,8 @@ public class MapCtrl : MonoBehaviour {
 		}
 
 		return cell;
+	}
+	public void clear(){
+		
 	}
 }

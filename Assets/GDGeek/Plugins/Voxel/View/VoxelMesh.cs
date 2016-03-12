@@ -65,21 +65,21 @@ namespace GDGeek{
 			VoxelHandler handler = new VoxelHandler();
 			VectorInt3 position;
 			if (_XReverse) {
-				position.x = (int)this.max_.x - data.x + (int)this.min_.x; 
+				position.x = (int)this.max_.x - data.pos.x + (int)this.min_.x; 
 			} else {
-				position.x = data.x;
+				position.x = data.pos.x;
 			}
 
 			if (_ZReverse) {
-				position.y = (int)this.max_.y - data.y + (int)this.min_.y; 
+				position.y = (int)this.max_.y - data.pos.y + (int)this.min_.y; 
 			} else {
-				position.y = data.y;
+				position.y = data.pos.y;
 			}
 
 			if (_YReverse) {
-				position.z = (int)this.max_.z - data.z + (int)this.min_.z; 
+				position.z = (int)this.max_.z - data.pos.z + (int)this.min_.z; 
 			} else {
-				position.z = data.z;
+				position.z = data.pos.z;
 			}
 			handler.position = position;
 			handler.color = data.color;
@@ -99,7 +99,7 @@ namespace GDGeek{
 			_datas = new VoxelHandler[datas.Length];
 			for (int i=0; i<datas.Length; ++i) {
 				VoxelData d = datas [i];
-				this.getMaxMin (d.x, d.y, d.z);
+				this.getMaxMin (d.pos.x, d.pos.y, d.pos.z);
 			}
 			for (int i=0; i<datas.Length; ++i) {
 				_datas[i] = data2Handler(datas [i]);

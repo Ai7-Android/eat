@@ -5,6 +5,12 @@ using System;
 namespace GDGeek{
 	[Serializable]
 	public struct VectorInt3 {
+
+		public static VectorInt3 operator-(VectorInt3 lhs, VectorInt3 rhs)
+		{
+			VectorInt3 to = new VectorInt3(lhs.x-rhs.x, lhs.y-rhs.y, lhs.z-rhs.z);
+			return to;
+		}
 		public static VectorInt3 one
 		{
 			get
@@ -83,7 +89,8 @@ namespace GDGeek{
 		{
 			return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z;
 		}
-	//	public VectorInt3()
+	
+
 		public int x;
 		public int y;
 		public int z;

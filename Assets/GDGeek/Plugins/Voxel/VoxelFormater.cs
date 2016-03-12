@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEditor;
 using GDGeek;
 using System.IO;
+using System.Collections.Generic;
+
+
 namespace GDGeek{
 	public class VoxelFormater
 	{
@@ -72,14 +75,14 @@ namespace GDGeek{
 			return point;
 		}
 
-		private static Point[] CreatePoint(VoxelData[] datas, VectorInt4[] palette){
+		private static Point[] CreatePoint(List<VoxelData> datas, VectorInt4[] palette){
 
-			Point[] points = new Point[datas.Length];
-			for (int i = 0; i < datas.Length; ++i) {
+			Point[] points = new Point[datas.Count];
+			for (int i = 0; i < datas.Count; ++i) {
 				points[i] = new Point();
-				points[i].x = (byte)datas[i].x;
-				points[i].y = (byte)datas[i].y;
-				points[i].z = (byte)datas[i].z;
+				points[i].x = (byte)datas[i].pos.x;
+				points[i].y = (byte)datas[i].pos.y;
+				points[i].z = (byte)datas[i].pos.z;
 				Color color = datas [i].color;
 				if (palette == null) {
 					ushort s = Color2Short (color);
@@ -102,19 +105,19 @@ namespace GDGeek{
 		
 			return points;
 		}
-		private static VoxelData[] CreateVoxelDatas(Point[] points, VectorInt4[] palette){
+		private static List<VoxelData> CreateVoxelDatas(Point[] points, VectorInt4[] palette){
 			//VoxelStruct vs = new VoxelStruct ();
 
 
 
-			VoxelData[] datas = new VoxelData[points.Length];
+			List<VoxelData> datas = new List<VoxelData>();
 
 			for(int i=0; i < points.Length; ++i){
-				datas[i] = new VoxelData();
-				datas[i].x = points[i].x;
-				datas[i].y = points[i].y;
-				datas[i].z = points[i].z;
-				datas[i].id = i;
+				VoxelData data = new VoxelData();
+				data.pos.x = points[i].x;
+				data.pos.y = points[i].y;
+				data.pos.z = points[i].z;
+				data.id = i;
 
 				//ushort c =  (colors == null ? voxColors[voxelData[i].color - 1] : colors[voxelData[i].color - 1]);
 				if(palette == null){
@@ -122,17 +125,17 @@ namespace GDGeek{
 
 					ushort c = palette_[points[i].i - 1];
 
-					datas [i].color = Short2Color (c);
+					data.color = Short2Color (c);
 
 
 
 				}else{
 					VectorInt4 v = palette[points[i].i - 1];
-					datas [i].color = Bytes2Color (v);;
+					data.color = Bytes2Color (v);;
 
 				}
 
-
+				datas.Add (data);
 				//	Debug.Log( "r:" + (c >> 10 & 0x1f)+ ",g:"+ (float)(c >> 5 & 0x1f) + ",b:"+ (float)(c & 0x1f));
 				//datas[i].cindex = voxelData[i].color;
 			}

@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEditor;
 using GDGeek;
 using System.IO;
+using System.Collections.Generic;
+
+
 namespace GDGeek{
 	public class VoxelStruct
 	{
@@ -29,6 +32,10 @@ namespace GDGeek{
 			public VectorInt4[] palette;
 
 		}
+
+
+
+
 		private static ushort[] palette = new ushort[] { 32767, 25599, 19455, 13311, 7167, 1023, 32543, 25375, 19231, 13087, 6943, 799, 32351, 25183, 
 			19039, 12895, 6751, 607, 32159, 24991, 18847, 12703, 6559, 415, 31967, 24799, 18655, 12511, 6367, 223, 31775, 24607, 18463, 12319, 6175, 31, 
 			32760, 25592, 19448, 13304, 7160, 1016, 32536, 25368, 19224, 13080, 6936, 792, 32344, 25176, 19032, 12888, 6744, 600, 32152, 24984, 18840, 
@@ -43,12 +50,90 @@ namespace GDGeek{
 			16384, 14336, 10240, 8192, 4096, 2048, 29596, 27482, 23254, 21140, 16912, 14798, 10570, 8456, 4228, 2114, 1  };
 
 
-		public VoxelData[] datas = null;
+		public List<VoxelData> datas = new List<VoxelData>();
 
 		public int version = 0;
 		public Main main = null;
 		public Size size = null;
 		public Rgba rgba = null;
+
+		public void arrange(bool normal = false){
+
+
+			HashSet<Color> palette = new HashSet<Color>();
+
+			VectorInt3 min = new VectorInt3(9999, 9999, 9999);
+			VectorInt3 max = new VectorInt3(-9999, -9999,-9999);
+
+			for (int i = 0; i < this.datas.Count; ++i) {
+				palette.Add (this.datas[i].color);
+
+				VectorInt3 pos = this.datas [i].pos;
+
+				min.x = Mathf.Min (pos.x, min.x);
+				min.y = Mathf.Min (pos.y, min.y);
+				min.z = Mathf.Min (pos.z, min.z);
+				max.x = Mathf.Max (pos.x, max.x);
+				max.y = Mathf.Max (pos.y, max.y);
+				max.z = Mathf.Max (pos.z, max.z);
+
+			}
+
+			if (normal) {
+				max = max - min;
+				for (int i = 0; i < this.datas.Count; ++i) {
+					palette.Add (this.datas[i].color);
+
+					VectorInt3 pos = this.datas [i].pos;
+					this.datas [i].pos = pos - min;
+
+				}
+				min = new VectorInt3 (0, 0, 0);
+			}
+
+			this.main = new VoxelStruct.Main ();
+			this.main.name = "MAIN";
+			this.main.size = 0;
+
+
+			this.size = new VoxelStruct.Size ();
+			this.size.name = "SIZE";
+			this.size.size = 12;
+			this.size.chunks = 0;
+
+			this.size.box = new VectorInt3 ();
+
+
+			this.size.box.x = max.x - min.x +1;
+			this.size.box.y = max.y - min.y +1;
+			this.size.box.z = max.z - min.z +1;
+
+
+			this.rgba = new VoxelStruct.Rgba ();
+
+			int size = Mathf.Max (palette.Count, 256);
+			this.rgba.palette = new VectorInt4[size];
+			int n = 0;
+			foreach (Color c in palette)
+			{
+				this.rgba.palette [n] = VoxelFormater.Color2Bytes (c);
+				++n;
+			}
+		
+
+
+
+			this.rgba.size = this.rgba.palette.Length * 4;
+			this.rgba.name = "RGBA";
+			this.rgba.chunks = 0;
+
+			this.version = 150;
+
+
+			this.main.chunks = 52 + this.rgba.palette.Length *4 + this.datas.Count *4;
+
+
+		}
 	}
 
 }

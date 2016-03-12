@@ -31,9 +31,9 @@ namespace GDGeek{
 			comp.from.localPosition = vox.gameObject.transform.localPosition;// = comp.alpha;
 			comp.from.color = vox.color;
 			comp.vox = vox;
-			comp.to.localPosition.x = to.x + offset.x;//-1;
-			comp.to.localPosition.y = to.y + offset.y;//-4;
-			comp.to.localPosition.z = to.z + offset.z;//-0.5f;
+			comp.to.localPosition.x = to.pos.x + offset.x;//-1;
+			comp.to.localPosition.y = to.pos.y + offset.y;//-4;
+			comp.to.localPosition.z = to.pos.z + offset.z;//-0.5f;
 			comp.to.color = to.color;
 			//comp.to = alpha;
 			/*

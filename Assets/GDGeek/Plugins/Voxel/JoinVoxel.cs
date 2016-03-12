@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 
 namespace GDGeek{
-	public class SpliceVoxel
+	public class JoinVoxel
 	{
 		public struct Packed
 		{
@@ -14,58 +14,44 @@ namespace GDGeek{
 			public VectorInt3 offset;
 
 		}
-		private HashSet<Color> palette_ = new HashSet<Color>();
 		private Dictionary<VectorInt3, VoxelData> dictionary_ = new Dictionary<VectorInt3, VoxelData>();
 		private List<Packed> list_ = new List<Packed>();
-		private VectorInt3 min_ = new VectorInt3(9999, 9999, 9999);
-		private VectorInt3 max_ = new VectorInt3(-9999, -9999,-9999);
 
 		public void addVoxel(VoxelStruct vs, VectorInt3 offset){
+//			Debug.Log (offset.x +","+ offset.y+","+ offset.z);
 			Packed packed = new Packed ();
 			packed.vs = vs;
 			packed.offset = offset;
 			list_.Add (packed);
 		}
 		public void clear(){
-			palette_.Clear ();
 			dictionary_.Clear ();
-			min_ = new VectorInt3(9999, 9999, 9999);
-			max_ = new VectorInt3(-9999, -9999,-9999);
 		}
 		public void readIt(Packed packed){
-			for (int i = 0; i < packed.vs.datas.Length; ++i) {
-				palette_.Add (packed.vs.datas[i].color);
-
-				VectorInt3 pos = new VectorInt3 (packed.vs.datas [i].x, packed.vs.datas [i].y, packed.vs.datas [i].z) + packed.offset;
-				dictionary_ [pos] = packed.vs.datas [i];
-
-				min_.x = Mathf.Min (pos.x, min_.x);
-				min_.y = Mathf.Min (pos.y, min_.y);
-				min_.z = Mathf.Min (pos.z, min_.z);
-				max_.x = Mathf.Max (pos.x, max_.x);
-				max_.y = Mathf.Max (pos.y, max_.y);
-				max_.z = Mathf.Max (pos.z, max_.z);
+			for (int i = 0; i < packed.vs.datas.Count; ++i) {
+				dictionary_ [packed.vs.datas [i].pos +packed.offset ] = packed.vs.datas [i];
 
 			}
-		
-		
+
+
 		}
-		public VoxelData[] getDatas(){
-			VoxelData[] datas = new VoxelData[dictionary_.Count];
+		public List<VoxelData> getDatas(){
+			List<VoxelData> datas = new List<VoxelData>();
 			int i = 0;
 			foreach(KeyValuePair<VectorInt3, VoxelData> item in dictionary_){
 				VoxelData data = new VoxelData ();
 				data.color = item.Value.color;
-				data.x = item.Key.x;
-				data.y = item.Key.y;
-				data.z = item.Key.z;
+				data.pos.x = item.Key.x;
+				data.pos.y = item.Key.y;
+				data.pos.z = item.Key.z;
 
 				data.id = i;
-				datas [i] = data;
+				datas.Add (data);
 				++i;
 			}
 			return datas;
 		}
+		/*
 		public VectorInt4[] getPalette(){
 			int size = Mathf.Max (palette_.Count, 256);
 			VectorInt4[] palette = new VectorInt4[size];
@@ -75,12 +61,11 @@ namespace GDGeek{
 				palette [i] = VoxelFormater.Color2Bytes (c);
 				++i;
 			}
-			//for(int i =0; i<)
 			return palette;
 		}
-
+*/
 		//public 
-		public VoxelStruct spliceAll(){
+		public VoxelStruct doIt(){
 
 			this.clear ();
 			for (int i = 0; i < list_.Count; ++i) {
@@ -89,19 +74,19 @@ namespace GDGeek{
 			}
 
 			VoxelStruct vs = new VoxelStruct();
-
+			/*
 			vs.main = new VoxelStruct.Main ();
 			vs.main.name = "MAIN";
 			vs.main.size = 0;
 
-		
+
 			vs.size = new VoxelStruct.Size ();
 			vs.size.name = "SIZE";
 			vs.size.size = 12;
 			vs.size.chunks = 0;
 
 			vs.size.box = new VectorInt3 ();
-		
+
 
 			vs.size.box.x = this.max_.x - this.min_.x +1;
 			vs.size.box.y = this.max_.y - this.min_.y +1;
@@ -117,12 +102,15 @@ namespace GDGeek{
 
 			/**/
 			vs.datas = this.getDatas ();
-			Debug.Log (vs.datas.Length);
+			vs.arrange (true);
+			/*
+			Debug.Log (vs.datas.Count);
 			vs.version = 150;
 
 
-			vs.main.chunks = 52 + vs.rgba.palette.Length *4 + vs.datas.Length *4;
+			vs.main.chunks = 52 + vs.rgba.palette.Length *4 + vs.datas.Count *4;
 			Debug.Log (vs.main.chunks);
+			*/
 			return vs;
 
 		}

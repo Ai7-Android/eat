@@ -7,7 +7,7 @@ namespace GDGeek{
 	[Serializable]
 	[JsonOptIn]
 	public class VoxelData{
-		[JsonMember]
+		/*[JsonMember]
 		public int x = 0;
 		
 		[JsonMember]
@@ -15,6 +15,8 @@ namespace GDGeek{
 		
 		[JsonMember]
 		public int z = 0;
+*/
+		public VectorInt3 pos;
 
 
 		[JsonMember]
@@ -22,10 +24,7 @@ namespace GDGeek{
 		
 		[JsonMember]
 		public int id = 0;
-		///public void test(){
 
-			//JsonUtility.ToJson ();
-		//}
 
 
 		
